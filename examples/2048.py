@@ -27,12 +27,17 @@ def board():
     display.rectangle(0, 0, WIDTH, HEIGHT)
     
     display.set_pen(0)
-    display.line(0, 0, 0, HEIGHT)
+    display.line(0, 0, 0, HEIGHT) # Vertical lines
     display.line(74, 0, 74, HEIGHT)
     display.line(148, 0, 148, HEIGHT)
     display.line(222, 0, 222, HEIGHT)
     display.line(295, 0, 295, HEIGHT)
     
+    display.line(0, 0, WIDTH, 0)
+    display.line(0, 32, WIDTH, 32)
+    display.line(0, 64, WIDTH, 64)
+    display.line(0, 96, WIDTH, 96)
+    display.line(0, 127, WIDTH, 127)
 
 start()
 while True:
