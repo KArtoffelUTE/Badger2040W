@@ -33,13 +33,18 @@ def board():
     display.line(222, 0, 222, HEIGHT)
     display.line(295, 0, 295, HEIGHT)
     
-    display.line(0, 0, WIDTH, 0)
+    display.line(0, 0, WIDTH, 0) # Horizontal Lines
     display.line(0, 32, WIDTH, 32)
     display.line(0, 64, WIDTH, 64)
     display.line(0, 96, WIDTH, 96)
     display.line(0, 127, WIDTH, 127)
 
+def numbers():
+    display.text("2", 30, 10, scale=3)
+    display.update()
+
 start()
+numbers()
 while True:
     display.keepalive()
     
