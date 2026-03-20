@@ -9,6 +9,11 @@ display.set_thickness(2)
 WIDTH = badger2040.WIDTH
 HEIGHT = badger2040.HEIGHT
 
+board = [ "2", " ", " ", " ",
+          "4", " ", " ", " ",
+          " ", " ", "32", " ",
+          " ", " ", " ", " ",]
+
 def start():
     display.set_update_speed(badger2040.UPDATE_NORMAL)
     display.set_pen(0)
@@ -17,10 +22,10 @@ def start():
     
     display.set_update_speed(badger2040.UPDATE_FAST)
     
-    board()
+    draw_board()
     display.update()
     
-def board():
+def draw_board():
     WIDTH = badger2040.WIDTH # Speed 
     HEIGHT = badger2040.HEIGHT
     display.set_pen(15)
@@ -57,6 +62,12 @@ def numbers():
     
     display.text("8192", 8, 101, scale=3) 
     display.update()
+    
+    for i, number in enumerate(board):
+        print(number)
+        
+
+print("HI")
 
 start()
 numbers()
