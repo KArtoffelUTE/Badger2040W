@@ -8,11 +8,12 @@ display.set_thickness(2)
 
 WIDTH = badger2040.WIDTH
 HEIGHT = badger2040.HEIGHT
+SCALE = 3
 
-board = [ "2", " ", " ", " ",
-          "4", " ", " ", " ",
-          " ", " ", "32", " ",
-          " ", " ", " ", " ",]
+g_board = [ "2", "4", "8", "16",
+          "32", "64", "128", "256",
+          "512", "1024", "2048", "4096",
+          "8192", "1024", "2048", "4096",]
 
 def start():
     display.set_update_speed(badger2040.UPDATE_NORMAL)
@@ -45,26 +46,48 @@ def draw_board():
     display.line(0, 127, WIDTH, 127)
 
 def numbers():
-    display.text("2", 30, 5, scale=3) # fuer 4 Stellige Zahlen: 5,5 fuer 1 stellige zahlen: 30,5 fuer drei: 20,5 fuer zwei: 23,5
-    display.text("4", 104, 5, scale=3)
-    display.text("8", 178, 5, scale=3)
-    display.text("16", 248, 5, scale=3)
-    
-    display.text("32", 23, 37, scale=3)
-    display.text("64", 97, 37, scale=3)
-    display.text("128", 166, 37, scale=3)
-    display.text("256", 237, 37, scale=3)
-    
-    display.text("512", 20, 69, scale=3)
-    display.text("1024", 82, 69, scale=3)
-    display.text("2048", 153, 69, scale=3)
-    display.text("4096", 225, 69, scale=3)
-    
-    display.text("8192", 8, 101, scale=3) 
-    display.update()
-    
+    board = g_board
+    display.set_pen(0)
     for i, number in enumerate(board):
         print(number)
+        if i == 0:
+            display.text(number, 30, 5, scale=3)
+        elif i == 1:
+            display.text(number, 104, 5, scale=3)
+        elif i == 2:
+            display.text(number, 178, 5, scale=3)
+        elif i == 3:
+            display.text(number, 248, 5, scale=3)
+            
+        elif i == 4:
+            display.text(number, 23, 37, scale=3)
+        elif i == 5:
+            display.text(number, 97, 37, scale=3)
+        elif i == 6:
+            display.text(number, 166, 37, scale=3)
+        elif i == 7:
+            display.text(number, 237, 37, scale=3)
+            
+        elif i == 8:
+            display.text(number, 20, 69, scale=3)
+        elif i == 9:
+            display.text(number, 82, 69, scale=3)
+        elif i == 10:
+            display.text(number, 153, 69, scale=3)
+        elif i == 11:
+            display.text(number, 225, 69, scale=3)
+            
+        elif i == 12:
+            display.text(number, 8, 101, scale=3)
+        elif i == 13:
+            display.text(number, 82, 101, scale=3)
+        elif i == 14:
+            display.text(number, 153, 101, scale=3)
+        elif i == 15:
+            display.text(number, 225, 101, scale=3)
+    
+    display.update()
+        
         
 
 print("HI")
