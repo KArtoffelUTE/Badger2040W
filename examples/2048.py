@@ -40,7 +40,22 @@ def board():
     display.line(0, 127, WIDTH, 127)
 
 def numbers():
-    display.text("2", 30, 10, scale=3)
+    display.text("2", 30, 5, scale=3) # fuer 4 Stellige Zahlen: 5,5 fuer 1 stellige zahlen: 30,5 fuer drei: 20,5 fuer zwei: 23,5
+    display.text("4", 104, 5, scale=3)
+    display.text("8", 178, 5, scale=3)
+    display.text("16", 248, 5, scale=3)
+    
+    display.text("32", 23, 37, scale=3)
+    display.text("64", 97, 37, scale=3)
+    display.text("128", 166, 37, scale=3)
+    display.text("256", 237, 37, scale=3)
+    
+    display.text("512", 20, 69, scale=3)
+    display.text("1024", 82, 69, scale=3)
+    display.text("2048", 153, 69, scale=3)
+    display.text("4096", 225, 69, scale=3)
+    
+    display.text("8192", 8, 101, scale=3) 
     display.update()
 
 start()
