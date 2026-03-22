@@ -12,9 +12,9 @@ HEIGHT = badger2040.HEIGHT
 SCALE = 3
 
 g_board = [ " ", " ", " ", " ",
-          "32", "64", "128", "256",
-          "512", "1024", "2048", "4096",
-          "8192", "1024", "2048", "4096",]
+            " ", " ", " ", " ",
+            " ", " ", " ", " ",
+            " ", " ", " ", " ",]
 
 def start():
     display.set_update_speed(badger2040.UPDATE_NORMAL)
@@ -94,11 +94,24 @@ def numbers():
     
     display.update()
 
-def fill_board():
+def pick_two_distinct(values):
+    first = random.choice(values)
+    second = random.choice(values)
+    while second == first:
+        second = random.choice(values)
+    return first, second
+
+def fill_board_start():
     global g_board
+    nothing = []
     for i, number in enumerate(g_board):
         if number == " ":
-            g_board[i] = random.choice(["2", "4"])
+            nothing.append(i)
+    
+    a, b = pick_two_distinct(nothing)
+    
+    g_board[a] = random.choice(["2", "4"])
+    g_board[b] = random.choice(["2", "4"])
     
         
         
@@ -106,7 +119,7 @@ def fill_board():
 print("HI")
 
 start()
-fill_board()
+fill_board_start()
 numbers()
 while True:
     display.keepalive()
