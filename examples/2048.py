@@ -1,4 +1,5 @@
 import badger2040
+import random
 
 display = badger2040.Badger2040()
 display.led(128)
@@ -10,7 +11,7 @@ WIDTH = badger2040.WIDTH
 HEIGHT = badger2040.HEIGHT
 SCALE = 3
 
-g_board = [ "1024", "4", "128", "32",
+g_board = [ " ", " ", " ", " ",
           "32", "64", "128", "256",
           "512", "1024", "2048", "4096",
           "8192", "1024", "2048", "4096",]
@@ -92,12 +93,20 @@ def numbers():
             display.text(number, x+74*3+2, 101, scale=3)
     
     display.update()
+
+def fill_board():
+    global g_board
+    for i, number in enumerate(g_board):
+        if number == " ":
+            g_board[i] = random.choice(["2", "4"])
+    
         
         
 
 print("HI")
 
 start()
+fill_board()
 numbers()
 while True:
     display.keepalive()
