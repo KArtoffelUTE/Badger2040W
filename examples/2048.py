@@ -112,6 +112,42 @@ def fill_board_start():
     
     g_board[a] = random.choice(["2", "4"])
     g_board[b] = random.choice(["2", "4"])
+
+def move_up():
+    global g_board
+
+    for col in range(4):
+    # Indizes der Spalte
+        idx = [col, col+4, col+8, col+12]
+
+        # Werte der Spalte holen
+        col_vals = [g_board[i] for i in idx]
+
+        # 1. Leere entfernen
+        filtered = [v for v in col_vals if v != " "]
+
+        # 2. Mergen
+        merged = []
+        skip = False
+        for i in range(len(filtered)):
+            if skip:
+                skip = False
+                continue
+
+            if i+1 < len(filtered) and filtered[i] == filtered[i+1]:
+                merged.append(str(int(filtered[i]) * 2))
+                skip = True
+            else:
+                merged.append(filtered[i])
+
+        # 3. Wieder auffüllen
+        while len(merged) < 4:
+            merged.append(" ")
+
+        # 4. Zurückschreiben
+        for i, val in zip(idx, merged):
+            g_board[i] = val
+        
     
         
         
@@ -123,5 +159,13 @@ fill_board_start()
 numbers()
 while True:
     display.keepalive()
+    
+    if display.pressed(badger2040.BUTTON_UP):
+        move_up()
+        display.set_pen(15)
+        display.clear()
+        draw_board()
+        numbers()
+        display.update()
     
     display.halt()
