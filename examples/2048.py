@@ -207,7 +207,44 @@ def move_right():
         for i, val in zip(idx, merged):
             g_board[i] = val
         
-
+def move_left():
+    global g_board
+    
+    for line in range(4):
+        if line == 0:
+            idx = [line, line+1, line+2, line+3]
+        elif line == 1:
+            idx = [line+3, line+4, line+5, line+6]
+        elif line == 2:
+            idx = [line+6, line+7, line+8, line+9]
+        elif line == 3:
+            idx = [line+9, line+10, line+11, line+12]
+        print(idx)
+        
+        line_vals = [g_board[i] for i in idx]
+        
+        filtered = [v for v in line_vals if v != " "]
+        
+        merged = []
+        skip = False
+        for i in range(len(filtered)):
+            if skip:
+                skip = False
+                continue
+            
+            if i+1 < len(filtered) and filtered[i] == filtered[i+1]:
+                merged.append(str(int(filtered[i]) * 2))
+                skip = True
+            else:
+                merged.append(filtered[i])
+        
+        while len(merged) < 4:
+            merged.append(" ")
+        
+        for i, val in zip(idx, merged):
+            g_board[i] = val
+    
+    
 print("HI")
 
 start()
@@ -233,6 +270,13 @@ while True:
         display.update()
     elif display.pressed(badger2040.BUTTON_C):
         move_right()
+        display.set_pen(15)
+        display.clear()
+        draw_board()
+        numbers()
+        display.update()
+    elif display.pressed(badger2040.BUTTON_A):
+        move_left()
         display.set_pen(15)
         display.clear()
         draw_board()
