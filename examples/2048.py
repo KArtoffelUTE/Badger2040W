@@ -91,8 +91,6 @@ def numbers():
             display.text(number, x+74*2, 101, scale=3)
         elif i == 15:
             display.text(number, x+74*3+2, 101, scale=3)
-    
-    display.update()
 
 def pick_two_distinct(values):
     first = random.choice(values)
@@ -119,13 +117,10 @@ def move_up():
     for col in range(4):
     # Indizes der Spalte
         idx = [col, col+4, col+8, col+12]
-
         # Werte der Spalte holen
         col_vals = [g_board[i] for i in idx]
-
         # 1. Leere entfernen
         filtered = [v for v in col_vals if v != " "]
-
         # 2. Mergen
         merged = []
         skip = False
@@ -148,8 +143,33 @@ def move_up():
         for i, val in zip(idx, merged):
             g_board[i] = val
         
+def move_down():
+    global g_board
     
+    for col in range(4):
+        idx = [col, col+4, col+8, col+12]
+        col_vals = [g_board[i] for i in idx]
         
+        filtered = [v for v in col_vals if v != " "]
+        
+        merged = []
+        skip = False
+        for i in range(len(filtered)):
+            if skip:
+                skip = False
+                continue
+            
+            if i+1 < len(filtered) and filtered[i] == filtered[i+1]:
+                merged.append(str(int(filtered[i]) * 2))
+                skip = True
+            else:
+                merged.append(filtered[i])
+        
+        while len(merged) < 4:
+            merged.insert(0, " ")
+        
+        for i, val in zip(idx, merged):
+            g_board[i] = val
         
 
 print("HI")
@@ -157,11 +177,19 @@ print("HI")
 start()
 fill_board_start()
 numbers()
+display.update()
 while True:
     display.keepalive()
     
     if display.pressed(badger2040.BUTTON_UP):
         move_up()
+        display.set_pen(15)
+        display.clear()
+        draw_board()
+        numbers()
+        display.update()
+    elif display.pressed(badger2040.BUTTON_DOWN):
+        move_down()
         display.set_pen(15)
         display.clear()
         draw_board()
