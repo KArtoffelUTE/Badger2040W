@@ -120,6 +120,31 @@ def fill_board():
     print(a)
     g_board[a] = random.choice(["2", "4"])
 
+def compress_and_merge(line):
+    # Remove spaces
+    nums = [x for x in line if x != " "]
+
+    merged = []
+    skip = False
+
+    for i in range(len(nums)):
+        if skip:
+            skip = False
+            continue
+
+        if i+1 < len(nums) and nums[i] == nums[i+1]:
+            merged.append(str(int(nums[i]) * 2))
+            skip = True
+        else:
+            merged.append(nums[i])
+
+    # Fill with spaces
+    while len(merged) < 4:
+        merged.append(" ")
+
+    return merged
+
+
 def move_up():
     global g_board
 
@@ -127,26 +152,9 @@ def move_up():
     # Indizes der Spalte
         idx = [col, col+4, col+8, col+12]
         # Werte der Spalte holen
-        col_vals = [g_board[i] for i in idx]
-        # 1. Leere entfernen
-        filtered = [v for v in col_vals if v != " "]
+        line = [g_board[i] for i in idx]
         # 2. Mergen
-        merged = []
-        skip = False
-        for i in range(len(filtered)):
-            if skip:
-                skip = False
-                continue
-
-            if i+1 < len(filtered) and filtered[i] == filtered[i+1]:
-                merged.append(str(int(filtered[i]) * 2))
-                skip = True
-            else:
-                merged.append(filtered[i])
-
-        # 3. Wieder auffüllen
-        while len(merged) < 4:
-            merged.append(" ")
+        merged = compress_and_merge(line)
 
         # 4. Zurückschreiben
         for i, val in zip(idx, merged):
@@ -157,25 +165,10 @@ def move_down():
     
     for col in range(4):
         idx = [col, col+4, col+8, col+12]
-        col_vals = [g_board[i] for i in idx]
+        line = [g_board[i] for i in idx]
         
-        filtered = [v for v in col_vals if v != " "]
-        
-        merged = []
-        skip = False
-        for i in range(len(filtered)):
-            if skip:
-                skip = False
-                continue
-            
-            if i+1 < len(filtered) and filtered[i] == filtered[i+1]:
-                merged.append(str(int(filtered[i]) * 2))
-                skip = True
-            else:
-                merged.append(filtered[i])
-        
-        while len(merged) < 4:
-            merged.insert(0, " ")
+        merged = compress_and_merge(list(reversed(line)))
+        merged.reverse()
         
         for i, val in zip(idx, merged):
             g_board[i] = val
@@ -183,35 +176,12 @@ def move_down():
 def move_right():
     global g_board
     
-    for line in range(4):
-        if line == 0:
-            idx = [line, line+1, line+2, line+3]
-        elif line == 1:
-            idx = [line+3, line+4, line+5, line+6]
-        elif line == 2:
-            idx = [line+6, line+7, line+8, line+9]
-        elif line == 3:
-            idx = [line+9, line+10, line+11, line+12]
-        print(idx)
+    for row in range(4):
+        idx = [row*4 + i for i in range(4)]
+        line = [g_board[i] for i in idx]
         
-        line_vals = [g_board[i] for i in idx]
-        
-        filtered = [v for v in line_vals if v != " "]
-        
-        merged = []
-        skip = False
-        for i in range(len(filtered)):
-            if skip:
-                skip = False
-                continue
-            
-            if i+1 < len(filtered) and filtered[i] == filtered[i+1]:
-                merged.append(str(int(filtered[i]) * 2))
-                skip = True
-            else:
-                merged.append(filtered[i])
-        while len(merged) < 4:
-            merged.insert(0, " ")
+        merged = compress_and_merge(list(reversed(line)))
+        merged.reverse()
         
         for i, val in zip(idx, merged):
             g_board[i] = val
@@ -219,39 +189,18 @@ def move_right():
 def move_left():
     global g_board
     
-    for line in range(4):
-        if line == 0:
-            idx = [line, line+1, line+2, line+3]
-        elif line == 1:
-            idx = [line+3, line+4, line+5, line+6]
-        elif line == 2:
-            idx = [line+6, line+7, line+8, line+9]
-        elif line == 3:
-            idx = [line+9, line+10, line+11, line+12]
-        print(idx)
+    for row in range(4):
+        idx = [row*4 + i for i in range(4)]
+        line = [g_board[i] for i in idx]
         
-        line_vals = [g_board[i] for i in idx]
-        
-        filtered = [v for v in line_vals if v != " "]
-        
-        merged = []
-        skip = False
-        for i in range(len(filtered)):
-            if skip:
-                skip = False
-                continue
-            
-            if i+1 < len(filtered) and filtered[i] == filtered[i+1]:
-                merged.append(str(int(filtered[i]) * 2))
-                skip = True
-            else:
-                merged.append(filtered[i])
-        
-        while len(merged) < 4:
-            merged.append(" ")
+        merged = compress_and_merge(line)
         
         for i, val in zip(idx, merged):
             g_board[i] = val
+
+def board_changed(old, new):
+    return old != new
+
     
     
 print("HI")
@@ -264,36 +213,44 @@ while True:
     display.keepalive()
     
     if display.pressed(badger2040.BUTTON_UP):
+        old = g_board.copy()
         move_up()
+        if board_changed(old, g_board):
+            fill_board()
         display.set_pen(15)
         display.clear()
         draw_board()
         numbers()
-        fill_board()
         display.update()
     elif display.pressed(badger2040.BUTTON_DOWN):
+        old = old = g_board.copy()
         move_down()
+        if board_changed(old, g_board):
+            fill_board()
         display.set_pen(15)
         display.clear()
         draw_board()
         numbers()
-        fill_board()
         display.update()
     elif display.pressed(badger2040.BUTTON_C):
+        old = g_board.copy()
         move_right()
+        if board_changed(old, g_board):
+            fill_board()
         display.set_pen(15)
         display.clear()
         draw_board()
         numbers()
-        fill_board()
         display.update()
     elif display.pressed(badger2040.BUTTON_A):
+        old = g_board.copy()
         move_left()
+        if board_changed(old, g_board):
+            fill_board()
         display.set_pen(15)
         display.clear()
         draw_board()
         numbers()
-        fill_board()
         display.update()
     
     display.halt()
