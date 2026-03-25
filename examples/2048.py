@@ -50,7 +50,6 @@ def numbers():
     board = g_board
     display.set_pen(0)
     for i, number in enumerate(board):
-        print(number)
         lenght = len(number)
         width = display.measure_text(number, scale=3)
         box_width = 74
@@ -110,6 +109,16 @@ def fill_board_start():
     
     g_board[a] = random.choice(["2", "4"])
     g_board[b] = random.choice(["2", "4"])
+
+def fill_board():
+    global g_board
+    nothing = []
+    for i, number in enumerate(g_board):
+        if number == " ":
+            nothing.append(i)
+    a = random.choice(nothing)
+    print(a)
+    g_board[a] = random.choice(["2", "4"])
 
 def move_up():
     global g_board
@@ -260,6 +269,7 @@ while True:
         display.clear()
         draw_board()
         numbers()
+        fill_board()
         display.update()
     elif display.pressed(badger2040.BUTTON_DOWN):
         move_down()
@@ -267,6 +277,7 @@ while True:
         display.clear()
         draw_board()
         numbers()
+        fill_board()
         display.update()
     elif display.pressed(badger2040.BUTTON_C):
         move_right()
@@ -274,6 +285,7 @@ while True:
         display.clear()
         draw_board()
         numbers()
+        fill_board()
         display.update()
     elif display.pressed(badger2040.BUTTON_A):
         move_left()
@@ -281,6 +293,7 @@ while True:
         display.clear()
         draw_board()
         numbers()
+        fill_board()
         display.update()
     
     display.halt()
