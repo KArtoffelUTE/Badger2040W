@@ -1,5 +1,6 @@
 import badger2040
 import random
+import time
 
 display = badger2040.Badger2040()
 display.led(128)
@@ -264,8 +265,14 @@ while True:
         display.set_pen(0)
         display.set_font("bitmap8")
         display.text("Game Over", 0, 0, scale=5)
+        display.text("press b for new game", 0, 100, scale=2)
         display.update()
-    
+        while not display.pressed(badger2040.BUTTON_B):
+                time.sleep(0.05)
+        start()
+        fill_board_start()
+        numbers()
+        display.update()
         
     
     display.halt()
