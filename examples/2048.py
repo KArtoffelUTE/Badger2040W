@@ -145,61 +145,66 @@ def compress_and_merge(line):
     return merged
 
 
-def move_up():
-    global g_board
-
+def move_up(change_board):
     for col in range(4):
     # Indizes der Spalte
         idx = [col, col+4, col+8, col+12]
         # Werte der Spalte holen
-        line = [g_board[i] for i in idx]
+        line = [change_board[i] for i in idx]
         # 2. Mergen
         merged = compress_and_merge(line)
 
         # 4. Zurückschreiben
         for i, val in zip(idx, merged):
-            g_board[i] = val
+            change_board[i] = val
         
-def move_down():
-    global g_board
-    
+def move_down(change_board):
     for col in range(4):
         idx = [col, col+4, col+8, col+12]
-        line = [g_board[i] for i in idx]
+        line = [change_board[i] for i in idx]
         
         merged = compress_and_merge(list(reversed(line)))
         merged.reverse()
         
         for i, val in zip(idx, merged):
-            g_board[i] = val
+            change_board[i] = val
 
-def move_right():
-    global g_board
-    
+def move_right(change_board):
     for row in range(4):
         idx = [row*4 + i for i in range(4)]
-        line = [g_board[i] for i in idx]
+        line = [change_board[i] for i in idx]
         
         merged = compress_and_merge(list(reversed(line)))
         merged.reverse()
         
         for i, val in zip(idx, merged):
-            g_board[i] = val
+            change_board[i] = val
         
-def move_left():
-    global g_board
-    
+def move_left(change_board):
     for row in range(4):
         idx = [row*4 + i for i in range(4)]
-        line = [g_board[i] for i in idx]
+        line = [change_board[i] for i in idx]
         
         merged = compress_and_merge(line)
         
         for i, val in zip(idx, merged):
-            g_board[i] = val
+            change_board[i] = val
 
 def board_changed(old, new):
     return old != new
+
+def no_moves():
+    global g_board
+    test_board = g_board.copy()
+    move_up(test_board)
+    move_down(test_board)
+    move_right(test_board)
+    move_left(test_board)
+    if board_changed(g_board, test_board):
+        return False
+    else:
+        return True
+    
 
     
     
@@ -214,7 +219,7 @@ while True:
     
     if display.pressed(badger2040.BUTTON_UP):
         old = g_board.copy()
-        move_up()
+        move_up(g_board)
         if board_changed(old, g_board):
             fill_board()
             display.set_pen(15)
@@ -224,7 +229,7 @@ while True:
             display.update()
     elif display.pressed(badger2040.BUTTON_DOWN):
         old = old = g_board.copy()
-        move_down()
+        move_down(g_board)
         if board_changed(old, g_board):
             fill_board()
             display.set_pen(15)
@@ -234,7 +239,7 @@ while True:
             display.update()
     elif display.pressed(badger2040.BUTTON_C):
         old = g_board.copy()
-        move_right()
+        move_right(g_board)
         if board_changed(old, g_board):
             fill_board()
             display.set_pen(15)
@@ -244,7 +249,7 @@ while True:
             display.update()
     elif display.pressed(badger2040.BUTTON_A):
         old = g_board.copy()
-        move_left()
+        move_left(g_board)
         if board_changed(old, g_board):
             fill_board()
             display.set_pen(15)
@@ -252,5 +257,15 @@ while True:
             draw_board()
             numbers()
             display.update()
+    
+    if no_moves():
+        display.set_pen(15)
+        display.rectangle(0, 0, WIDTH, HEIGHT)
+        display.set_pen(0)
+        display.set_font("bitmap8")
+        display.text("Game Over", 0, 0, scale=5)
+        display.update()
+    
+        
     
     display.halt()
