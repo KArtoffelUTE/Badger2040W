@@ -6,6 +6,7 @@ display = badger2040.Badger2040()
 display.led(128)
 display.set_update_speed(badger2040.UPDATE_NORMAL)
 display.set_thickness(2)
+display.set_font("bitmap8")
 
 WIDTH = badger2040.WIDTH
 HEIGHT = badger2040.HEIGHT
