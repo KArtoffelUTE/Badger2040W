@@ -5,7 +5,6 @@ import time
 display = badger2040.Badger2040()
 display.led(128)
 display.set_update_speed(badger2040.UPDATE_NORMAL)
-badger2040.system_speed(badger2040.SYSTEM_FAST)
 display.set_thickness(2)
 
 WIDTH = badger2040.WIDTH
@@ -258,7 +257,10 @@ while True:
             draw_board()
             numbers()
             display.update()
-    
+    elif display.pressed(badger2040.BUTTON_A) and display.pressed(badger2040.BUTTON_C):
+        while(True):
+            display.keepalive()
+            display.halt()
     if no_moves():
         display.set_pen(15)
         display.rectangle(0, 0, WIDTH, HEIGHT)
@@ -273,6 +275,6 @@ while True:
         fill_board_start()
         numbers()
         display.update()
-        
+       
     
-    display.halt()
+    
