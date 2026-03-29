@@ -201,15 +201,31 @@ def board_changed(old, new):
 
 def no_moves():
     global g_board
-    test_board = g_board.copy()
-    move_up(test_board)
-    move_down(test_board)
-    move_right(test_board)
-    move_left(test_board)
-    if board_changed(g_board, test_board):
+    # Teste UP
+    test = g_board.copy()
+    move_up(test)
+    if test != g_board:
         return False
-    else:
-        return True
+
+    # Teste DOWN
+    test = g_board.copy()
+    move_down(test)
+    if test != g_board:
+        return False
+
+    # Teste LEFT
+    test = g_board.copy()
+    move_left(test)
+    if test != g_board:
+        return False
+
+    # Teste RIGHT
+    test = g_board.copy()
+    move_right(test)
+    if test != g_board:
+        return False
+
+    return True
     
 
     
