@@ -18,6 +18,11 @@ g_board = [ " ", " ", " ", " ",
             " ", " ", " ", " ",]
 
 def start():
+    global g_board
+    g_board = [ " ", " ", " ", " ",
+            " ", " ", " ", " ",
+            " ", " ", " ", " ",
+            " ", " ", " ", " ",]
     display.set_update_speed(badger2040.UPDATE_NORMAL)
     display.set_pen(0)
     display.clear()
@@ -276,6 +281,3 @@ while True:
         fill_board_start()
         numbers()
         display.update()
-       
-    
-    
