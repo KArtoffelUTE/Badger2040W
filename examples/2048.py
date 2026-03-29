@@ -16,9 +16,11 @@ g_board = [ " ", " ", " ", " ",
             " ", " ", " ", " ",
             " ", " ", " ", " ",
             " ", " ", " ", " ",]
-
+score = 0
+count_score = True
 def start():
-    global g_board
+    global g_board, score
+    score = 0
     g_board = [ " ", " ", " ", " ",
             " ", " ", " ", " ",
             " ", " ", " ", " ",
@@ -123,11 +125,11 @@ def fill_board():
         if number == " ":
             nothing.append(i)
     a = random.choice(nothing)
-    print(a)
     g_board[a] = random.choice(["2", "4"])
 
 def compress_and_merge(line):
     # Remove spaces
+    global score, count_score
     nums = [x for x in line if x != " "]
 
     merged = []
@@ -140,6 +142,9 @@ def compress_and_merge(line):
 
         if i+1 < len(nums) and nums[i] == nums[i+1]:
             merged.append(str(int(nums[i]) * 2))
+            if count_score:
+                score += int(nums[i]) * 2
+                print(score)
             skip = True
         else:
             merged.append(nums[i])
@@ -200,35 +205,38 @@ def board_changed(old, new):
     return old != new
 
 def no_moves():
-    global g_board
+    global g_board, count_score
+    count_score = False
+
     # Teste UP
     test = g_board.copy()
     move_up(test)
     if test != g_board:
+        count_score = True
         return False
 
     # Teste DOWN
     test = g_board.copy()
     move_down(test)
     if test != g_board:
+        count_score = True
         return False
 
     # Teste LEFT
     test = g_board.copy()
     move_left(test)
     if test != g_board:
+        count_score = True
         return False
 
     # Teste RIGHT
     test = g_board.copy()
     move_right(test)
     if test != g_board:
+        count_score = True
         return False
-
-    return True
-    
-
-    
+    count_score = True
+    return True 
     
 print("HI")
 
@@ -289,6 +297,7 @@ while True:
         display.set_pen(0)
         display.set_font("bitmap8")
         display.text("Game Over", 0, 0, scale=5)
+        display.text(f"Score: {score}", 0, 50, scale=2)
         display.text("press b for new game", 0, 100, scale=2)
         display.update()
         while not display.pressed(badger2040.BUTTON_B):
