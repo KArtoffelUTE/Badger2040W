@@ -1,15 +1,18 @@
 import badger2040
 import random
 import time
+import ujson
+import os
 
 display = badger2040.Badger2040()
 display.led(128)
 display.set_update_speed(badger2040.UPDATE_NORMAL)
 display.set_thickness(2)
 display.set_font("bitmap8")
-
+HIGHSCORE_FILE = "/state/2048.json"
 WIDTH = badger2040.WIDTH
 HEIGHT = badger2040.HEIGHT
+
 SCALE = 3
 
 g_board = [ " ", " ", " ", " ",
@@ -18,8 +21,10 @@ g_board = [ " ", " ", " ", " ",
             " ", " ", " ", " ",]
 score = 0
 count_score = True
+new_highscore = False
 def start():
-    global g_board, score
+    global g_board, score, new_highscore
+    new_highscore = False
     score = 0
     g_board = [ " ", " ", " ", " ",
             " ", " ", " ", " ",
@@ -236,8 +241,27 @@ def no_moves():
         count_score = True
         return False
     count_score = True
-    return True 
+    return True
+
+
+def load_highscore():
+    if "2048.json" in os.listdir("/state"):
+        try:
+            with open(HIGHSCORE_FILE, "r") as f:
+                data = ujson.loads(f.read())
+                return data.get("highscore", 0)
+        except:
+            return 0
+    else:
+        return 0
     
+def save_highscore(value):
+    data = {"highscore": value}
+    with open(HIGHSCORE_FILE, "w") as f:
+        f.write(ujson.dumps(data))
+
+highscore = load_highscore()
+print(highscore)
 print("HI")
 
 start()
@@ -292,11 +316,20 @@ while True:
             display.keepalive()
             display.halt()
     if no_moves():
+        if score > highscore:
+            highscore = score
+            save_highscore(highscore)
+            new_highscore = True
+        
         display.set_pen(15)
         display.rectangle(0, 0, WIDTH, HEIGHT)
         display.set_pen(0)
         display.set_font("bitmap8")
         display.text("Game Over", 0, 0, scale=5)
+        if new_highscore:
+            display.text(f"NEW HIGHSCORE: {highscore}", 0, 75, scale=3)
+        else:
+            display.text(f"Highscore: {highscore}", 0, 75, scale=2)
         display.text(f"Score: {score}", 0, 50, scale=2)
         display.text("press b for new game", 0, 100, scale=2)
         display.update()
