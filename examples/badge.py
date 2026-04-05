@@ -1,6 +1,7 @@
 import badger2040
 import jpegdec
 import os
+import ujson
 # ------------------------------
 #   Display Setup
 # ------------------------------
@@ -32,6 +33,7 @@ NAME_PADDING = 20
 DETAIL_SPACING = 10
 
 BADGE_PATH = "/badges/badge.txt"
+CURRENT_BADGE = "/state/current_badge.json"
 
 DEFAULT_TEXT = """mustelid inc
 H. Badger
@@ -132,7 +134,7 @@ def draw_badge():
 BADGE_DIR = "/badges"
 badge_files = [f for f in os.listdir(BADGE_DIR) if f.endswith(".txt")]
 badge_files.sort()  # alphabetisch sortieren
-badge_index = 0     # Start bei Badge 0
+
 
 def load_badge(index):
     global company, name, detail1_title, detail1_text, detail2_title, detail2_text, badge_image
@@ -205,19 +207,40 @@ detail2_text = truncatestring(detail2_text, DETAILS_TEXT_SIZE,
 #       Main program
 # ------------------------------
 
+def save_badge_index(value):
+    data = {"current_badge": value}
+    with open(CURRENT_BADGE, "w") as f:
+        f.write(ujson.dumps(data))
+        f.flush()
+        os.sync()   # wichtig auf RP2040
+def get_badge_index():
+    try:
+        with open(CURRENT_BADGE, "r") as f:
+            data = ujson.loads(f.read())
+            badge_index = data.get("current_badge", 0)
+    except:
+        badge_index = 0
+    if badge_index < 0:
+        badge_index = 0
+    if badge_index >= len(badge_files):
+        badge_index = len(badge_files) - 1
+    return badge_index
+
 #draw_badge()
-load_badge(badge_index)
+
+load_badge(get_badge_index())
 while True:
     # Sometimes a button press or hold will keep the system
     # powered *through* HALT, so latch the power back on.
     display.keepalive()
     
     if display.pressed(badger2040.BUTTON_UP):
-        badge_index = (badge_index - 1) % len(badge_files)
+        badge_index = (get_badge_index() - 1) % len(badge_files)
+        save_badge_index(badge_index)
         load_badge(badge_index)
-
     elif display.pressed(badger2040.BUTTON_DOWN):
-        badge_index = (badge_index + 1) % len(badge_files)
+        badge_index = (get_badge_index() + 1) % len(badge_files)
+        save_badge_index(badge_index)
         load_badge(badge_index)
     else:
         # If on battery, halt the Badger to save power, it will wake up if any of the front buttons are pressed
